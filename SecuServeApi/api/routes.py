@@ -45,3 +45,12 @@ def status():
         + "OWO whats this my api is up OwO~ this api is made by foxgirl, if u see this please contact me at nickblackburn02@gmail.com to help me with my project~"
         + "}"
     )
+
+
+"""
+Face cration for facial rec
+"""
+@apibp.route(consts.database + "createuser", methods=["POST"])
+
+def createFace():
+    pass
