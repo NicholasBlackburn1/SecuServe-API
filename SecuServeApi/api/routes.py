@@ -46,11 +46,115 @@ def status():
         + "}"
     )
 
+"""
+usr section of db
+"""
+@apibp.route(consts.user_data + "createuser", methods=["POST"])
+def createUser():
+    
+    logger.warning("creating New User in the db...")
+    logger.PipeLine_Ok("got User info successfully")
+
+    #! user data
+    user = app.UserData(**request.json)
+
+    user.id = request.json['id']
+    user.name = request.json['name']
+    user.group = request.json['group']
+    user.phonenumber = request.json['phone']
+
+    #checks if user is in the db\
+    if ( app.db.session.query(app.UserData).filter_by(id=user.id).scalar() is not None ):
+       
+        logger.Error("Entry exsits wont create a new one!")
+        return jsonify({"status": "usr in db already", "users face": str(user.id)})
+    
+    logger.warning("saving user into to db...")
+
+
+    app.db.session.add(user)
+    app.db.session.commit()
+
+    # saves the avis
+    logger.PipeLine_Ok("saved user to db....")
+
+    # logs the count of the avis in the db
+    logger.PipeLine_Data(
+        "entries in db is "
+        + str(app.db.session.query(app.UserData).count())
+    )
+    
+    
+    return jsonify({"status": "sent users faces", "user": str(user.id)})
+
+
+
+
+# gets all the Users from the db
+@apibp.route(consts.user_data + "getallusers", methods=["GET"])
+
+def getallusrs():
+    logger.warning("got all the users data")
+
+    logger.info("getting data....")
+
+    users = app.UserData.query.filter_by().all()
+    data = []
+    logger.warning("Data Users" + str(users))
+    # data sent in the lists is 0,1,2,3
+    for i in range(int(app.db.session.query(app.UserData).count())):
+        data.append(
+            [
+                users[i].id,
+                users[i].name,
+                users[i].group,
+                users[i].phonenumber,
+            ]
+        )
+
+    logger.PipeLine_Ok("got all users from db..")
+
+    return jsonify(data)
+
+
+
+# gets users face
+@apibp.route(consts.user_data + "getUser", methods=["POST"])
+def getalluserinfo():
+    
+    id = request.json["id"]
+    
+    logger.warning("gets user " + str(id) + "data.....")
+
+    usr = app.UserData.query.filter_by(id=str(id)).all()
+    data = []
+    logger.warning("Data Users" + str(usr))
+    # data sent in the lists is 0,1,2,3
+    for i in range(int(app.db.session.query(app.UserData).filter_by(id=str(id)).count())):
+        data.append(
+            [
+                usr[i].id,
+                usr[i].name,
+                usr[i].group,
+                usr[i].phonenumber,
+               
+                
+            ]
+        )
+
+    logger.PipeLine_Ok("got users face data uwu...")
+
+    return jsonify(data)
+
+
+
+
+
 
 """
 Face cration for facial rec
 """
-@apibp.route(consts.face_data + "createuser", methods=["POST"])
+@apibp.route(consts.face_data + "createface", methods=["POST"])
 
 def createFace():
 
@@ -80,14 +184,14 @@ def createFace():
     elif filedownloader.facedownloader(
         url=face.face_url,  face_name=face.face_name) != -2:
 
-        logger.warning("saving avi into to db...")
+        logger.warning("saving face into to db...")
 
 
         app.db.session.add(face)
         app.db.session.commit()
 
         # saves the avis
-        logger.PipeLine_Ok("saved avi to db....")
+        logger.PipeLine_Ok("saved face to db....")
 
         # logs the count of the avis in the db
         logger.PipeLine_Data(

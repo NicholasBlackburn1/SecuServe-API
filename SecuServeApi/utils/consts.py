@@ -7,6 +7,7 @@ files = "files/"
 face_images = apibase+files+"faces/"
 database = apibase+"database/"
 face_data = database+"faces/"
+user_data = database+"users/"
 
 
 
