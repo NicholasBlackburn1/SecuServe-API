@@ -64,5 +64,7 @@ def createFace():
 
     face.face_name = request.json['face_name']
     face.face2_name = request.json['face_name']
-    face.face_url = request.json['face_url']
+    face.face_url = 
     face.face2_url = request.json['face_url2']
+
+    

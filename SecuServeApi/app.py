@@ -42,7 +42,7 @@ class FaceData(db.Model):
 def configure_database(app, db):
     @app.before_first_request
     def initialize_database():
-        logger.warning("Creating db... ")
+        logger.warning("Crealatform: str, aviName: strting db... ")
 
         db.create_all()
         db.session.commit()

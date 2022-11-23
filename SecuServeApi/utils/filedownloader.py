@@ -6,14 +6,14 @@ import os
 import pathlib
 from urllib import request
 
-from utils import logger
+from utils import logger, consts
 import os
 import requests
+import validators
 
 
 
-
-# downloader for the avi
+# downloader for the files
 def downloadfiles(downloadUrl, location, file):
 
     try:
@@ -48,7 +48,7 @@ def downloadfiles(downloadUrl, location, file):
             if(response.status_code == 404):
                 logger.Error("cannot download fike does not exists!")
                 return -2
-                
+                asset_pc
             else:
                 with requests.get(url, headers=headers, stream=True) as r:
                     r.raise_for_status()
@@ -61,11 +61,41 @@ def downloadfiles(downloadUrl, location, file):
                     with open(location + file, "wb") as f:
                         for chunk in r.iter_content(chunk_size=8192):
                             # If you have chunk encoded response uncomment if
-                            # and set chunk_size parameter to None.
-                            # if chunk:
+                            # andasset_pcchunk:
                             f.write(chunk)
 
                 logger.PipeLine_Ok("done downloading  fike....")
     except:
     
         logger.Error("cannot download file")
+
+
+
+# downloader for assets
+def facedownloader(url: str, face_name: str):
+   
+    if validators.url(url) == True:
+
+        logger.warning("url" + str(url) + " " + "is valid owo")
+
+        # downloads the images to the face dir
+        if(downloadfiles(
+                downloadUrl=url,
+                location=str(str(pathlib.Path().absolute()) + consts.faces ),
+                file=str(face_name) + ".vrca") != -2):
+
+                return (
+                    "http://"
+                    + str(consts.url)
+                    + ":2000"
+                    + consts.face_images
+                    + str(face_name)
+                    + ".jpg"
+                )
+
+        logger.PipeLine_Ok("Done downloading the face data")
+
+    else:
+        
+        logger.Error("cannot download because its not exist! pc")
+        
