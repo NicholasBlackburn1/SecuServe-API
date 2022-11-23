@@ -9,26 +9,16 @@ from app import create_app
 from utils import logger,consts
 
 
-
-#
 def main():
+    
+    logger.info("cert paths"+ str(pathlib.Path().absolute())+"/data/"+'server.crt')
 
-
-    logger.info("starting api server UWu~....")
+  
 
     app = create_app()
-    app.config["SQLALCHEMY_DATABASE_URI"] = (
-        "sqlite:///" + str(pathlib.Path().absolute()) + consts.basepath + "data.db"
-    )
-
-    
-    
 
     app.run(threaded=True, debug=True, host=consts.url, port=2000)
 
-
-
-
-
-if __name__ == '__main__':
+# this sarts the file
+if __name__ == "__main__":
     main()

@@ -10,8 +10,9 @@ Flask = "^2.1.2"
 request2 = "^0.2"
 jsonfy = "^0.4"
 colorama = "^0.4.4"
-hypr-sqlalchemy = "^0.2.1"
 zmq = "^0.0.0"
+SQLAlchemy = "^1.4.44"
+flask-sqlalchemy = "^3.0.2"
 
 [tool.poetry.dev-dependencies]
 

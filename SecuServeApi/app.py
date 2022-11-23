@@ -1,16 +1,15 @@
 
 from pathlib import Path
+import pathlib
 from charset_normalizer import api
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from safrs import SAFRSAPI, SAFRSBase
-from api import aries
-from utils import Consts  # new
-from marshmallow import Schema, fields, post_load
+
+from utils import consts  # new
+
 from importlib import import_module
 from utils import logger
-from api import example_blueprint, routes
-from flask_debugtoolbar import DebugToolbarExtension
+from api import routes
 
 
 db = SQLAlchemy()
@@ -58,16 +57,21 @@ def configure_database(app, db):
 # this makes the local file paths for storing the data
 def makePaths():
 
-    if Path(str(Path().absolute()) + Consts.basepath).exists:
+    if Path(str(Path().absolute()) + consts.basepath).exists:
         # base bath
         logger.info("creating file structure for prgram...")
 
-        Path(str(Path().absolute()) + Consts.basepath).mkdir(
+        Path(str(Path().absolute()) + consts.basepath).mkdir(
             parents=True, exist_ok=True
         )
 
         # avi paths
-        Path(str(Path().absolute()) + Consts.faces).mkdir(
+        Path(str(Path().absolute()) + consts.faces).mkdir(
+            parents=True, exist_ok=True
+        )
+
+        # avi paths
+        Path(str(Path().absolute()) + consts.static).mkdir(
             parents=True, exist_ok=True
         )
 
@@ -86,19 +90,22 @@ def create_app():
    
     logger.Warning("Creating flask app...")
     app = Flask(__name__, static_url_path="/files",
-                static_folder="FoxConnector-Data/static")
+                static_folder=consts.basepath+"/static")
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = ('sqlite:///' + str(pathlib.Path().absolute()) + consts.basepath + 'data.db')
+
+    
 
     logger.PipeLine_Ok("started flaskapp")
 
     logger.info("registered blueprints")
-
     app.register_blueprint(routes.apibp)
     logger.PipeLine_Ok("REGISTERED blueprints")
 
-    logger.info("setting foxserver database..")
+    logger.info("setting  database..")
     configure_database(app, db)
     db.init_app(app)
-    
+
     return app
 
 
