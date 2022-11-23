@@ -71,7 +71,7 @@ def createFace():
     
        
 
-    if (consts.database app.db.session.query(app.FaceData).filter_by(usr_id=face.usr_id).scalar() is not None ):
+    if ( app.db.session.query(app.FaceData).filter_by(usr_id=face.usr_id).scalar() is not None ):
        
         logger.Error("Entry exsits wont create a new one!")
         return jsonify({"status": "face in db already", "users face": str(face.usr_id)})
