@@ -74,7 +74,7 @@ def downloadfiles(downloadUrl, location, file):
 # downloader for assets
 def facedownloader(url: str, face_name: str):
    
-    if validators.url(url) == True:
+    
 
         logger.warning("url" + str(url) + " " + "is valid owo")
 
@@ -82,7 +82,7 @@ def facedownloader(url: str, face_name: str):
         if(downloadfiles(
                 downloadUrl=url,
                 location=str(str(pathlib.Path().absolute()) + consts.faces ),
-                file=str(face_name) + ".vrca") != -2):
+                file=str(face_name) + ".jpg") != -2):
 
                 return (
                     "http://"
@@ -95,7 +95,3 @@ def facedownloader(url: str, face_name: str):
 
         logger.PipeLine_Ok("Done downloading the face data")
 
-    else:
-        
-        logger.Error("cannot download because its not exist! pc")
-        

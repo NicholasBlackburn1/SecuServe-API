@@ -171,7 +171,7 @@ def createFace():
     
     #! downloads the face data
     face.face_url = filedownloader.facedownloader(url=request.json['face_url'],face_name=request.json['face_name'])
-    face.face2_url = filedownloader.facedownloader(url=request.json['face2_url'],face_name=request.json['face2_name'])
+    face.face2_url = filedownloader.facedownloader(url=request.json['face2_url'],face_name=request.json['face_name'])
     
        
 
@@ -182,7 +182,7 @@ def createFace():
        
 
     elif filedownloader.facedownloader(
-        url=face.face_url,  face_name=face.face_name) != -2:
+        url=face.face_url,  face_name=face.usr_id) != -2:
 
         logger.warning("saving face into to db...")
 
