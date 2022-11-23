@@ -23,7 +23,7 @@ from flask import (
 )
 import requests
 from utils import logger,filedownloader
-
+import uuid
 
 
 apibp = Blueprint("apibp", __name__)
@@ -58,10 +58,10 @@ def createUser():
     #! user data
     user = app.UserData(**request.json)
 
-    user.id = request.json['id']
+    user.id = str(uuid.uuid4())
     user.name = request.json['name']
     user.group = request.json['group']
-    user.phonenumber = request.json['phone']
+    user.phonenumber = request.json['phonenumber']
 
     #checks if user is in the db\
     if ( app.db.session.query(app.UserData).filter_by(id=user.id).scalar() is not None ):
