@@ -50,7 +50,7 @@ def status():
 """
 Face cration for facial rec
 """
-@apibp.route(consts.database + "createuser", methods=["POST"])
+@apibp.route(consts.face_data + "createuser", methods=["POST"])
 
 def createFace():
 
@@ -71,10 +71,7 @@ def createFace():
     
        
 
-    if (
-        app.db.session.query(app.FaceData).filter_by(usr_id=face.usr_id).scalar()
-        is not None
-    ):
+    if (consts.database app.db.session.query(app.FaceData).filter_by(usr_id=face.usr_id).scalar() is not None ):
        
         logger.Error("Entry exsits wont create a new one!")
         return jsonify({"status": "face in db already", "users face": str(face.usr_id)})
@@ -100,3 +97,64 @@ def createFace():
         
        
         return jsonify({"status": "sent users faces", "user": str(face.usr_id)})
+
+
+
+# gets all the faces from the db
+
+@apibp.route(consts.face_data + "getallfaces", methods=["GET"])
+
+def getallFaces():
+    logger.warning("got all the users faces")
+
+    logger.info("getting faces....")
+
+    face = app.FaceData.query.filter_by().all()
+    data = []
+    logger.warning("Data faces" + str(face))
+    # data sent in the lists is 0,1,2,3
+    for i in range(int(app.db.session.query(app.FaceData).count())):
+        data.append(
+            [
+                face[i].usr_id,
+                face[i].face_name,
+                face[i].face_url,
+                face[i].face2_name,
+                face[i].face2_url,
+            ]
+        )
+
+    logger.PipeLine_Ok("got all faces from db..")
+
+    return jsonify(data)
+
+
+# gets users face
+@apibp.route(consts.face_data + "getUsrsFace", methods=["POST"])
+def getallaviduser():
+    
+    id = request.json["usr_id"]
+    
+    logger.warning("gets user " + str(id) + "data.....")
+
+    face = app.FaceData.query.filter_by(usr_id=str(id)).all()
+    data = []
+    logger.warning("Data face" + str(face))
+    # data sent in the lists is 0,1,2,3
+    for i in range(int(app.db.session.query(app.FaceData).filter_by(usr_id=str(id)).count())):
+        data.append(
+            [
+                face[i].usr_id,
+                face[i].face_name,
+                face[i].face_url,
+                face[i].face2_name,
+                face[i].face2_url,
+                
+            ]
+        )
+
+    logger.PipeLine_Ok("got users face data uwu...")
+
+    return jsonify(data)
+
+
