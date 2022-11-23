@@ -22,7 +22,7 @@ from flask import (
     send_file,
 )
 import requests
-from utils import logger
+from utils import logger,filedownloader
 
 
 
@@ -63,8 +63,40 @@ def createFace():
     face.usr_id = request.json['usr_id']
 
     face.face_name = request.json['face_name']
-    face.face2_name = request.json['face_name']
-    face.face_url = 
-    face.face2_url = request.json['face_url2']
-
+    face.face2_name = request.json['face2_name']
     
+    #! downloads the face data
+    face.face_url = filedownloader.facedownloader(url=request.json['face_url'],face_name=request.json['face_name'])
+    face.face2_url = filedownloader.facedownloader(url=request.json['face2_url'],face_name=request.json['face2_name'])
+    
+       
+
+    if (
+        app.db.session.query(app.FaceData).filter_by(usr_id=face.usr_id).scalar()
+        is not None
+    ):
+       
+        logger.Error("Entry exsits wont create a new one!")
+        return jsonify({"status": "face in db already", "users face": str(face.usr_id)})
+       
+
+    elif filedownloader.facedownloader(
+        url=face.face_url,  face_name=face.face_name) != -2:
+
+        logger.warning("saving avi into to db...")
+
+
+        app.db.session.add(face)
+        app.db.session.commit()
+
+        # saves the avis
+        logger.PipeLine_Ok("saved avi to db....")
+
+        # logs the count of the avis in the db
+        logger.PipeLine_Data(
+            "entries in db is "
+            + str(app.db.session.query(app.FaceData).count())
+        )
+        
+       
+        return jsonify({"status": "sent users faces", "user": str(face.usr_id)})
