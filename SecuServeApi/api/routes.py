@@ -1,7 +1,7 @@
 """
 main api server rout
 """
-
+import app
 from utils import consts
 from crypt import methods
 from datetime import datetime
@@ -53,4 +53,16 @@ Face cration for facial rec
 @apibp.route(consts.database + "createuser", methods=["POST"])
 
 def createFace():
-    pass
+
+    logger.warning("creating New faces in the db...")
+
+    logger.PipeLine_Ok("got faces info successfully")
+    #! face data
+    face = app.FaceData(**request.json)
+
+    face.usr_id = request.json['usr_id']
+
+    face.face_name = request.json['face_name']
+    face.face2_name = request.json['face_name']
+    face.face_url = request.json['face_url']
+    face.face2_url = request.json['face_url2']
